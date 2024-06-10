@@ -32,9 +32,10 @@ module ActionMailboxAmazonIngress
       if content_in_s3?
         s3_content
       else
-        return message[:content] unless destination
+        decoded_content = Base64.strict_decode64(message[:content])
+        return decoded_content unless destination
 
-        "X-Original-To: #{destination}\n#{message[:content]}"
+        "X-Original-To: #{destination}\n#{decoded_content}"
       end
     end
 
